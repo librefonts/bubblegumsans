@@ -6,16 +6,20 @@ before_install:
 - cp /usr/lib/python2.7/dist-packages/fontforge.* "$HOME/virtualenv/python2.7.8/lib/python2.7/site-packages"
 install:
 - pip install git+https://github.com/behdad/fontTools.git
+- pip install git+https://github.com/googlefonts/fontcrunch.git
 - pip install git+https://github.com/googlefonts/fontbakery-cli.git
 - pip install jinja2
-script: PATH=/home/travis/virtualenv/python2.7.8/bin/:$PATH fontbakery.py .
+before_script:
+- mkdir -p builds/build
+script: PATH=/home/travis/virtualenv/python2.7.8/bin/:$PATH fontbakery.py . | tee builds/build/build.log
 branches:
   only:
   - master
 after_script:
-- rm -rf builds/build/sources builds/build/build.state.yaml
 - PATH=/home/travis/virtualenv/python2.7.8/bin/:$PATH bakery-report.py builds/build
+- rm -rf builds/build/sources
+- rm -rf builds/build/build.state.yaml
 - PATH=/home/travis/virtualenv/python2.7.8/bin/:$PATH travis-deploy.py
 env:
   global:
-    secure: cTlK/bzttTsGa3YrareZ8y6ELq3/d6gKR9zL4LsN7uiofY4J5eUJbJKwj2hhvqCN5HzFozTDS5QBuul7v6QH/mlIJ7d7qleAIlXMu8s3EnODlJeF8lOGtGAhV1EqsJGeo74hFFYxpudt7B/1AVsPH36+LbLCxH6ypqNODwVotGI=
+    secure: k3i/X7/3oyV6iXqNiu+p114BP9aR0/psSVYQBF7qQ01OXyK+s5D/1ZOYIo0oQq5/hq73R3NmNsQe2M3G3EPzWqlvv/2fGZw/kqBNMPq+5gpdQuyXThJKtdcWaBYBOwn7mTBAuM1NX944Ai1GVmbBXvn2kVOILlEyU2L5cc3U5m8=
